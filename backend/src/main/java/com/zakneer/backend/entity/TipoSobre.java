@@ -6,8 +6,8 @@ import com.zakneer.backend.dto.sobres.SobreComun;
 import com.zakneer.backend.dto.sobres.SobreEspecial;
 
 public enum TipoSobre {
-    COMUN(3600, new SobreComun()),
     BASICO(300,new SobreBasico()),
+    COMUN(3600, new SobreComun()),
     ESPECIAL(86400,new SobreEspecial());
 
     private final long cooldownSegundos;

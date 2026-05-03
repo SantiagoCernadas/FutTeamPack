@@ -132,6 +132,7 @@ public class PackService {
                     .tipoSobre(tipo)
                     .disponible(disponible)
                     .segundosRestantes(segundosRestantes)
+                    .imagen(uriImagenesUtils.getUrlImagen("sobre_"+tipo.name().toLowerCase()+".png"))
                     .tiempoRestanteFormateado(formatearTiempo(segundosRestantes))
                     .build());
         }

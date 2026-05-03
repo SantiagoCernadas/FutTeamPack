@@ -14,5 +14,6 @@ public class SobreResponse {
     private TipoSobre tipoSobre;
     private Long segundosRestantes;
     private String tiempoRestanteFormateado;
+    private String imagen;
     private boolean disponible;
 }

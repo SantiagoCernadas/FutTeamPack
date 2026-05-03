@@ -2,7 +2,7 @@ const BASE_URL = 'http://localhost:8080/';
 
 
 async function callApi(endpoint, method = 'GET', body = null) {
-    const token = localStorage.getItem('token');
+    const token = getTokenCookie();
 
     const settings = {
         method: method,
@@ -62,3 +62,24 @@ export function getTokenCookie() {
     .find(row => row.startsWith("session_token="))
     ?.split("=")[1] ?? null;
 }
+
+export async function getSobresDisponibles() {
+    try{
+        const response = await callApi('packs', 'GET');
+        return response;
+    }
+    catch(err){
+        throw err;
+    }
+}
+
+export async function abrirSobre(tipoSobre) {
+    try{
+        const response = await callApi('packs/' + tipoSobre, 'POST');
+        return response;
+    }
+    catch(err){
+        throw err;
+    }
+}
+
