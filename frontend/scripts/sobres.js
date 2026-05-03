@@ -1,13 +1,14 @@
 import { getSobresDisponibles,abrirSobre } from "./api.js";
 
 
+const contenedor = document.querySelector('.contenedor-sobres');
+
 async function sobresDisponibles() {
     const sobres = await getSobresDisponibles();
     return sobres;
 }
 
 async function imprimirSobres() {
-    const contenedor = document.querySelector('.contenedor-sobres');
     const listaSobres = await sobresDisponibles();
 
     contenedor.innerHTML = "";
@@ -80,7 +81,8 @@ function mostrarBotonAbrir(contenedor,tipoSobre) {
     boton.classList.add('boton-abrir-sobre');
     boton.onclick = async () => {
         try{
-             await abrirSobre(tipoSobre);
+            const equiposSobre = await abrirSobre(tipoSobre);
+            imprimirSobreAbierto(equiposSobre);
         } catch(err){
             alert(err.mensaje);
         }
@@ -95,6 +97,10 @@ function formatearTiempo(segundosTotales) {
     const segundos = segundosTotales % 60;
 
     return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+}
+
+function imprimirSobreAbierto(equiposSobre){
+    contenedor.innerHTML = "";
 }
 
 await imprimirSobres();
