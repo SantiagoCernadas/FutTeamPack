@@ -1,5 +1,6 @@
 const BASE_URL = 'http://localhost:8080/';
 
+
 async function callApi(endpoint, method = 'GET', body = null) {
     const token = localStorage.getItem('token');
 
@@ -11,7 +12,6 @@ async function callApi(endpoint, method = 'GET', body = null) {
         }
     };
 
-    // Si hay cuerpo (para POST o PUT), lo convertimos a JSON
     if (body) {
         settings.body = JSON.stringify(body);
     }
@@ -55,7 +55,6 @@ function cerrarSesion() {
     document.cookie = "session_token=; path=/; max-age=0;"
     window.location.href = "/iniciar_sesion.html";
 }
-
 
 export function getTokenCookie() {
     return document.cookie

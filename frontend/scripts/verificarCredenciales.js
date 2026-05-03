@@ -1,4 +1,4 @@
-import { getTokenCookie } from "./api";
+import { getTokenCookie } from "./api.js";
 
 const token = getTokenCookie();
 if (!token) {

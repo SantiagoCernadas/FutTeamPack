@@ -103,6 +103,12 @@ button:active{
     gap: 5px;
 }
 
+#mensaje-error{
+    font-size: 16px;
+    color: #ff5d65;
+    font-weight: bold;
+}
+
 .contenedor-input button{
     width: 100px;
     padding: 5px 0px;
