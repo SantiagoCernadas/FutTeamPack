@@ -1,7 +1,10 @@
-import { getSobresDisponibles,abrirSobre } from "./api.js";
+import { getSobresDisponibles, abrirSobre } from "./api.js";
 
 
 const contenedor = document.querySelector('.contenedor-sobres');
+const contenedorSobreAbierto = document.querySelector('.contenedor-sobre-abierto');
+const listaSobre = document.querySelector('.lista-sobre');
+listaSobre.style.display = 'none';
 
 async function sobresDisponibles() {
     const sobres = await getSobresDisponibles();
@@ -33,15 +36,15 @@ async function imprimirSobres() {
         // Contenedor de acción (Donde irá el cronómetro o el botón)
         const areaAccion = document.createElement('div');
         areaAccion.classList.add('area-accion');
-        
+
         // Lógica de disponibilidad inicial
         // Asumiendo que 'sobre.tiempoRestante' viene en segundos desde el backend
-        let tiempoRestante = sobre.segundosRestantes; 
+        let tiempoRestante = sobre.segundosRestantes;
 
         if (tiempoRestante <= 0) {
-            mostrarBotonAbrir(areaAccion,tipoSobre);
+            mostrarBotonAbrir(areaAccion, tipoSobre);
         } else {
-            iniciarCronometro(areaAccion, tiempoRestante,tipoSobre);
+            iniciarCronometro(areaAccion, tiempoRestante, tipoSobre);
         }
 
         sobreHTML.appendChild(areaAccion);
@@ -49,10 +52,10 @@ async function imprimirSobres() {
     });
 }
 
-function iniciarCronometro(contenedor, segundos,tipoSobre) {
+function iniciarCronometro(contenedor, segundos, tipoSobre) {
     const pInfo = document.createElement('p');
     pInfo.textContent = "Disponible en:";
-    
+
     const pTiempo = document.createElement('p');
     pTiempo.classList.add('cronometro');
 
@@ -64,26 +67,26 @@ function iniciarCronometro(contenedor, segundos,tipoSobre) {
         if (segundos <= 0) {
             clearInterval(intervalo);
             contenedor.innerHTML = "";
-            mostrarBotonAbrir(contenedor,tipoSobre);
+            mostrarBotonAbrir(contenedor, tipoSobre);
         } else {
             pTiempo.textContent = formatearTiempo(segundos);
         }
     }, 1000);
-    
+
     pTiempo.textContent = formatearTiempo(segundos);
 }
 
-function mostrarBotonAbrir(contenedor,tipoSobre) {
+function mostrarBotonAbrir(contenedor, tipoSobre) {
     const parrafo = document.createElement('p');
     parrafo.textContent = "Sobre ya disponible!";
     const boton = document.createElement('button');
     boton.textContent = "Abrir sobre";
     boton.classList.add('boton-abrir-sobre');
     boton.onclick = async () => {
-        try{
+        try {
             const equiposSobre = await abrirSobre(tipoSobre);
-            imprimirSobreAbierto(equiposSobre);
-        } catch(err){
+            imprimirSobreAbierto(equiposSobre, tipoSobre);
+        } catch (err) {
             alert(err.mensaje);
         }
     };
@@ -99,8 +102,61 @@ function formatearTiempo(segundosTotales) {
     return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
 }
 
-function imprimirSobreAbierto(equiposSobre){
+function imprimirSobreAbierto(equiposSobre, tipoSobre) {
     contenedor.innerHTML = "";
+    contenedorSobreAbierto.innerHTML = "";
+
+    document.getElementById('nombre-sobre').textContent = "Sobre " + tipoSobre;
+    equiposSobre.forEach((equipo) => {
+        const equipoHTML = document.createElement('div');
+        equipoHTML.classList.add('contenedor-sobre-equipo');
+
+        const imagenEquipo = document.createElement('img');
+        imagenEquipo.classList.add('imagen-equipo');
+        imagenEquipo.src = equipo.imagen;
+        equipoHTML.appendChild(imagenEquipo);
+
+        const nombreEquipo = document.createElement('p');
+        nombreEquipo.textContent = equipo.nombre;
+        equipoHTML.appendChild(nombreEquipo);
+
+        const tier = document.createElement('p');
+        tier.textContent = "Tier: " + equipo.tier;
+        equipoHTML.appendChild(tier);
+
+        const divInfo = document.createElement('div');
+        divInfo.classList.add('contenedor-equipo-info');
+        const imagenLiga = document.createElement('img');
+        imagenLiga.classList.add('imagen-liga');
+        imagenLiga.src = equipo.liga.imagen;
+        const imagenPais = document.createElement('img');
+        imagenPais.classList.add('imagen-pais');
+        imagenPais.src = equipo.pais.imagen;
+        divInfo.appendChild(imagenLiga);
+        divInfo.appendChild(imagenPais);
+
+        equipoHTML.appendChild(divInfo);
+
+        const cantidad = document.createElement('p');
+        cantidad.textContent = "cantidad: " + equipo.cantidad;
+
+        equipoHTML.appendChild(cantidad);
+
+        if(equipo.cantidad == 1){
+            const etiquetaNuevo = document.createElement('p');
+            etiquetaNuevo.classList.add('etiqueta-desbloqueado');
+            etiquetaNuevo.textContent = "¡Nuevo!";
+            equipoHTML.appendChild(etiquetaNuevo);
+        }
+
+        contenedorSobreAbierto.appendChild(equipoHTML);
+    })
+    listaSobre.style.display = 'flex';
 }
+
+document.getElementById('boton-sobre-aceptar').addEventListener('click', () => {
+    imprimirSobres();
+    listaSobre.style.display = 'none';
+});
 
 await imprimirSobres();
