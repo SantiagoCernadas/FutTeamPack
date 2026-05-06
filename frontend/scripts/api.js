@@ -24,7 +24,7 @@ async function callApi(endpoint, method = 'GET', body = null) {
         const data = await response.json();
 
         if (!response.ok) {
-            if(data.error = 'No autorizado'){
+            if(data.error == 'No autorizado'){
                 cerrarSesion();
             }
             throw data; 
@@ -51,7 +51,7 @@ function setTokenCookie(token) {
     document.cookie = "session_token="+token+"; path=/; max-age=86400;SameSite=Strict";
 }
 
-function cerrarSesion() {
+export function cerrarSesion() {
     document.cookie = "session_token=; path=/; max-age=0;"
     window.location.href = "/iniciar_sesion.html";
 }

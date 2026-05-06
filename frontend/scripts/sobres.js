@@ -4,7 +4,6 @@ import { getSobresDisponibles, abrirSobre } from "./api.js";
 const contenedor = document.querySelector('.contenedor-sobres');
 const contenedorSobreAbierto = document.querySelector('.contenedor-sobre-abierto');
 const listaSobre = document.querySelector('.lista-sobre');
-listaSobre.style.display = 'none';
 
 async function sobresDisponibles() {
     const sobres = await getSobresDisponibles();
@@ -155,8 +154,8 @@ function imprimirSobreAbierto(equiposSobre, tipoSobre) {
 }
 
 document.getElementById('boton-sobre-aceptar').addEventListener('click', () => {
-    imprimirSobres();
     listaSobre.style.display = 'none';
+    imprimirSobres();
 });
 
 await imprimirSobres();

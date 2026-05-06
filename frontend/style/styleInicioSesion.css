@@ -1,24 +1,8 @@
-* {
-    padding: 0px;
-    margin: 0px;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
-}
-
 body {
-    background-color: #0000008c;
+    background-color: #0000008c !important;
 }
 
 
-
-body{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-header{
-    width: 100%;
-}
 
 h1 {
     font-style: italic;

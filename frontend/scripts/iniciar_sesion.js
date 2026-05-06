@@ -1,4 +1,4 @@
-import { iniciarSesion } from "./api.js";
+import { getTokenCookie, iniciarSesion } from "./api.js";
 
 const mensajeError = document.getElementById('mensaje-error');
 
@@ -19,7 +19,7 @@ document.getElementById('boton_iniciar_sesion').addEventListener('click', async 
     limpiarMensajeError();
     try{
         await iniciarSesion(nickname,contrasenia);
-        window.location.href = "/sobres.html";
+        location.replace("sobres.html");
     } catch (err){
         setMensajeError(err.mensaje);
     }
