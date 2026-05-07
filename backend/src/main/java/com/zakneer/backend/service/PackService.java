@@ -93,7 +93,8 @@ public class PackService {
                             .build());
         }
 
-
+        usuarioEntity.setSobresAbiertos(usuarioEntity.getSobresAbiertos()+1);
+        usuarioRepository.save(usuarioEntity);
 
         return equiposResponse;
     }

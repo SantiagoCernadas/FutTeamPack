@@ -11,4 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UsuarioResponse {
     private String nickname;
+    private Integer sobresAbiertos;
+    private String imagen;
 }

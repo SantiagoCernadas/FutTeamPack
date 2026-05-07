@@ -7,6 +7,7 @@ import com.zakneer.backend.entity.UsuarioEntity;
 import com.zakneer.backend.exception.LogicaInvalidaException;
 import com.zakneer.backend.repository.UsuarioRepository;
 import com.zakneer.backend.utils.JwtUtils;
+import com.zakneer.backend.utils.UriImagenesUtils;
 import jakarta.validation.constraints.NotBlank;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class UsuarioService {
     @Autowired
     private JwtUtils jwtUtils;
 
+    @Autowired
+    private UriImagenesUtils uriImagenesUtils;
+
     public UsuarioResponse agregarUsuario(Map<String,String> headers, UsuarioRequest usuarioRequest){
         if (usuarioRepository.findByNickname(usuarioRequest.getNickname()).isPresent()){
             throw new LogicaInvalidaException("Ya existe un usuario con nombre de usuario: " + usuarioRequest.getNickname());
@@ -37,6 +41,8 @@ public class UsuarioService {
         UsuarioEntity usuarioEntity = UsuarioEntity.builder()
                 .nickname(usuarioRequest.getNickname())
                 .contrasenia(encoder.encode(usuarioRequest.getContrasenia()))
+                .imagenEquipo("equipo_generico.png")
+                .sobresAbiertos(0)
                 .rol(Rol.USUARIO)
                 .build();
 
@@ -84,15 +90,15 @@ public class UsuarioService {
 
     }
 
-    public @Nullable UsuarioResponse obtenerUsuario(Map<String, String> headers) {
-        String token = headers.get("Authorization").substring(7);
-        String nickname = jwtUtils.getNicknameFromToken(token);
+    public UsuarioResponse obtenerUsuario(Map<String, String> headers,String nickname) {
         UsuarioEntity usuarioEntity = usuarioRepository.findByNickname(nickname)
                 .orElseThrow(() -> new NoSuchElementException("No se encontro un usuario con en nick: " + nickname));
 
         return UsuarioResponse.
                 builder()
                 .nickname(usuarioEntity.getNickname())
+                .sobresAbiertos(usuarioEntity.getSobresAbiertos())
+                .imagen(uriImagenesUtils.getUrlImagen(usuarioEntity.getImagenEquipo()))
                 .build();
     }
 }

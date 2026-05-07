@@ -48,7 +48,7 @@ export async function iniciarSesion(nickname,contrasenia) {
 }
 
 function setTokenCookie(token) {
-    document.cookie = "session_token="+token+"; path=/; max-age=86400;SameSite=Strict";
+    document.cookie = "session_token="+token+"; path=/; max-age=3600;SameSite=Strict";
 }
 
 export function cerrarSesion() {
@@ -61,6 +61,20 @@ export function getTokenCookie() {
     .split("; ")
     .find(row => row.startsWith("session_token="))
     ?.split("=")[1] ?? null;
+}
+
+export function getNickFromToken() {
+  try {
+    const base64Url = getTokenCookie().split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload).sub;
+  } catch (e) {
+    return null;
+  }
 }
 
 export async function getSobresDisponibles() {
@@ -76,6 +90,16 @@ export async function getSobresDisponibles() {
 export async function abrirSobre(tipoSobre) {
     try{
         const response = await callApi('packs/' + tipoSobre, 'POST');
+        return response;
+    }
+    catch(err){
+        throw err;
+    }
+}
+
+export async function obtenerUsuario(nickname) {
+    try{
+        const response = await callApi('usuario/' + nickname, 'GET');
         return response;
     }
     catch(err){

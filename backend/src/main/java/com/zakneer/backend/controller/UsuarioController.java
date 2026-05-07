@@ -23,9 +23,9 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.agregarUsuario(headers,usuarioRequest));
     }
 
-    @GetMapping()
-    public ResponseEntity<UsuarioResponse> obtenerUsuario(@RequestHeader Map<String,String> headers){
-        return ResponseEntity.ok(usuarioService.obtenerUsuario(headers));
+    @GetMapping("/{nickname}")
+    public ResponseEntity<UsuarioResponse> obtenerUsuario(@RequestHeader Map<String,String> headers,@PathVariable String nickname){
+        return ResponseEntity.ok(usuarioService.obtenerUsuario(headers,nickname));
     }
 
 }
