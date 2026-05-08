@@ -44,6 +44,7 @@ public class SecurityConfig {
                     ).permitAll();
                     auth.requestMatchers("/auth/login").permitAll();
                     auth.requestMatchers("/usuario/*").permitAll();
+                    auth.requestMatchers("/equipo/usuario/*").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> {

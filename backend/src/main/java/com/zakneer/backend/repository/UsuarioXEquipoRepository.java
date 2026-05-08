@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface UsuarioXEquipoRepository extends CrudRepository<UsuarioXEquipoEntity, UsuarioEquipoId> {
-    @Query(value = "SELECT * FROM usuarioxequipo where id_usuario = :idUsuario",nativeQuery = true)
+    @Query(value = "SELECT * FROM usuarioxequipo where id_usuario = :idUsuario limit 5",nativeQuery = true)
     List<UsuarioXEquipoEntity> getUsuarioXEquipoById_usuario(Long idUsuario);
 }

@@ -107,3 +107,13 @@ export async function obtenerUsuario(nickname) {
     }
 }
 
+export async function obtenerEquiposPorUsuario(nickname) {
+    try{
+        const response = await callApi('equipo/usuario/' + nickname, 'GET');
+        return response;
+    }
+    catch(err){
+        throw err;
+    }
+}
+

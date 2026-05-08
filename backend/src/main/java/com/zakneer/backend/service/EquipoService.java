@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 public class EquipoService {
@@ -74,15 +71,14 @@ public class EquipoService {
     }
 
 
-    public List<EquipoUsuarioResponse> getEquiposUsuario(Map<String, String> headers){
-        String token = headers.get("Authorization").substring(7);
-        String nickname = jwtUtils.getNicknameFromToken(token);
+    public List<EquipoUsuarioResponse> getEquiposUsuario(Map<String, String> headers,String nickname){
 
         UsuarioEntity usuarioEntity = usuarioRepository.findByNickname(nickname).orElseThrow(
-                () -> new LogicaInvalidaException("Usuario no encontrado.")
+                () -> new NoSuchElementException("Usuario: " + nickname + " Inexistente")
         );
 
         List<UsuarioXEquipoEntity> listaEntity = usuarioXEquipoRepository.getUsuarioXEquipoById_usuario(usuarioEntity.getId());
+        listaEntity.sort(Comparator.comparing((UsuarioXEquipoEntity entity) -> entity.getEquipo().getTier().getValor()).reversed());
         List<EquipoUsuarioResponse> listaResponse = new ArrayList<>();
 
         for (UsuarioXEquipoEntity entity: listaEntity){

@@ -23,8 +23,8 @@ public class EquipoController {
         return ResponseEntity.ok(equipoService.agregarEquipo(headers,equipoRequest));
     }
 
-    @GetMapping("/usuario")
-    public ResponseEntity<List<EquipoUsuarioResponse>> obtenerEquiposUsuario(@RequestHeader Map<String,String> headers){
-        return ResponseEntity.ok(equipoService.getEquiposUsuario(headers));
+    @GetMapping("/usuario/{nickname}")
+    public ResponseEntity<List<EquipoUsuarioResponse>> obtenerEquiposUsuario(@RequestHeader Map<String,String> headers,@PathVariable String nickname){
+        return ResponseEntity.ok(equipoService.getEquiposUsuario(headers,nickname));
     }
 }

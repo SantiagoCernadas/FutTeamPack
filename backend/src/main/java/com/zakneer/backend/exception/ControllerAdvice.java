@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 @Hidden
@@ -108,6 +109,21 @@ public class ControllerAdvice {
         return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NoSuchElementException.class)
+    @Hidden
+    public ResponseEntity<ErrorResponse> elementoNoEncontrado(NoSuchElementException ex,WebRequest request) {
+        String path = request.getDescription(false).replace("uri=", "");
+
+        ErrorResponse error = ErrorResponse.builder()
+                .error("Elemento no encontrado.")
+                .estado(404)
+                .mensaje(ex.getMessage())
+                .ruta(path)
+                .tiempo(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(Exception.class)
     @Hidden
     public ResponseEntity<ErrorResponse> errorGenerico(Exception ex,WebRequest request) {
@@ -116,7 +132,7 @@ public class ControllerAdvice {
         ErrorResponse error = ErrorResponse.builder()
                 .error("ERROR INTERNO.")
                 .estado(500)
-                .mensaje(ex.getMessage())
+                .mensaje("Error inesperado en el servidor.")
                 .ruta(path)
                 .tiempo(LocalDateTime.now())
                 .build();

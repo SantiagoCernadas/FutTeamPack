@@ -92,7 +92,7 @@ public class UsuarioService {
 
     public UsuarioResponse obtenerUsuario(Map<String, String> headers,String nickname) {
         UsuarioEntity usuarioEntity = usuarioRepository.findByNickname(nickname)
-                .orElseThrow(() -> new NoSuchElementException("No se encontro un usuario con en nick: " + nickname));
+                .orElseThrow(() -> new NoSuchElementException("El usuario: " + nickname + " no existe."));
 
         return UsuarioResponse.
                 builder()

@@ -1,6 +1,5 @@
 .contenedor-perfil-datos{
     background-color: #1C1917;
-    border: 5px solid #FFFF00;
     display: flex;
     padding: 20px;
     color: white;
@@ -41,8 +40,7 @@ p{
 }
 
 h2{
-    color: white;
-    border-bottom: 1px solid #FFFF00;
+    color: #FFFF00;
     font-size: 30px;
 }
 
@@ -61,10 +59,25 @@ h2{
 }
 
 .contenedor-equipo{
-    border: 2px solid white;
+    border: 2px solid #FFFF00;
     border-radius: 20px;
 }
 
 .contenedor-equipo img{
     width: 150px;
+}
+
+.boton-ver-todos{
+    background-color: #1C1917;
+    border: 2px solid #FFFF00;
+    width: 150px;
+    border-radius: 20px;
+    color: white;
+    font-size: 20px;
+}
+
+.boton-ver-todos:hover{
+    background-color: #FFFF00;
+    cursor: pointer;
+    color: #1C1917;
 }
