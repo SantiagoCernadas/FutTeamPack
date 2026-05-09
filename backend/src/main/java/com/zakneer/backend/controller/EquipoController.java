@@ -6,6 +6,7 @@ import com.zakneer.backend.dto.EquipoUsuarioResponse;
 import com.zakneer.backend.service.EquipoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,8 @@ public class EquipoController {
     }
 
     @GetMapping("/usuario/{nickname}")
-    public ResponseEntity<List<EquipoUsuarioResponse>> obtenerEquiposUsuario(@RequestHeader Map<String,String> headers,@PathVariable String nickname){
-        return ResponseEntity.ok(equipoService.getEquiposUsuario(headers,nickname));
+    public ResponseEntity<Page<EquipoUsuarioResponse>> obtenerEquiposUsuario(@RequestHeader Map<String,String> headers, @PathVariable String nickname,@RequestParam(defaultValue = "0") int pagina,
+                                                                             @RequestParam(defaultValue = "5") int cantidad){
+        return ResponseEntity.ok(equipoService.getEquiposUsuario(headers,nickname,pagina,cantidad));
     }
 }

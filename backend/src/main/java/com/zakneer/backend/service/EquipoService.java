@@ -7,6 +7,10 @@ import com.zakneer.backend.repository.*;
 import com.zakneer.backend.utils.JwtUtils;
 import com.zakneer.backend.utils.UriImagenesUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -71,31 +75,28 @@ public class EquipoService {
     }
 
 
-    public List<EquipoUsuarioResponse> getEquiposUsuario(Map<String, String> headers,String nickname){
-
+    public Page<EquipoUsuarioResponse> getEquiposUsuario(Map<String, String> headers, String nickname,int pagina,int cantidad){
+        Pageable pageable = PageRequest.of(pagina,cantidad);
         UsuarioEntity usuarioEntity = usuarioRepository.findByNickname(nickname).orElseThrow(
                 () -> new NoSuchElementException("Usuario: " + nickname + " Inexistente")
         );
 
-        List<UsuarioXEquipoEntity> listaEntity = usuarioXEquipoRepository.getUsuarioXEquipoById_usuario(usuarioEntity.getId());
-        listaEntity.sort(Comparator.comparing((UsuarioXEquipoEntity entity) -> entity.getEquipo().getTier().getValor()).reversed());
-        List<EquipoUsuarioResponse> listaResponse = new ArrayList<>();
+        Page<UsuarioXEquipoEntity> listaEntity = usuarioXEquipoRepository.getUsuarioXEquipoById_usuario(usuarioEntity.getId(),pageable);
 
-        for (UsuarioXEquipoEntity entity: listaEntity){
-            EquipoUsuarioResponse response = EquipoUsuarioResponse
-                    .builder()
-                    .nombre(entity.getEquipo().getNombre())
-                    .pais(new PaisResponse(entity.getEquipo().getLiga().getPais().getNombre(),uriImagenesUtils.getUrlImagen(entity.getEquipo().getLiga().getPais().getUriImagen())))
-                    .liga(new LigaResponse(entity.getEquipo().getLiga().getNombre(), uriImagenesUtils.getUrlImagen(entity.getEquipo().getLiga().getUriImagen())))
-                    .tier(entity.getEquipo().getTier().getTier())
-                    .imagen(uriImagenesUtils.getUrlImagen(entity.getEquipo().getUriImagen()))
-                    .cantidad(entity.getCantidad())
-                    .build();
-
-            listaResponse.add(response);
-        }
-
-        return listaResponse;
+        return listaEntity.map(entity -> EquipoUsuarioResponse.builder()
+                .nombre(entity.getEquipo().getNombre())
+                .pais(new PaisResponse(
+                        entity.getEquipo().getLiga().getPais().getNombre(),
+                        uriImagenesUtils.getUrlImagen(entity.getEquipo().getLiga().getPais().getUriImagen())
+                ))
+                .liga(new LigaResponse(
+                        entity.getEquipo().getLiga().getNombre(),
+                        uriImagenesUtils.getUrlImagen(entity.getEquipo().getUriImagen())
+                ))
+                .tier(entity.getEquipo().getTier().getTier())
+                .imagen(uriImagenesUtils.getUrlImagen(entity.getEquipo().getUriImagen()))
+                .cantidad(entity.getCantidad())
+                .build()
+        );
     }
-
 }

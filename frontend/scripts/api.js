@@ -107,9 +107,9 @@ export async function obtenerUsuario(nickname) {
     }
 }
 
-export async function obtenerEquiposPorUsuario(nickname) {
+export async function obtenerEquiposPorUsuario(nickname,pagina = 0,cantidad = 5) {
     try{
-        const response = await callApi('equipo/usuario/' + nickname, 'GET');
+        const response = await callApi('equipo/usuario/' + nickname+"?pagina="+pagina+"&cantidad="+cantidad, 'GET');
         return response;
     }
     catch(err){
