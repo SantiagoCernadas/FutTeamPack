@@ -1,5 +1,6 @@
 package com.zakneer.backend.controller;
 
+import com.zakneer.backend.dto.UsuarioExistenteResponse;
 import com.zakneer.backend.dto.UsuarioRequest;
 import com.zakneer.backend.dto.UsuarioResponse;
 import com.zakneer.backend.service.UsuarioService;
@@ -21,6 +22,11 @@ public class UsuarioController {
     public ResponseEntity<UsuarioResponse> agregarUsuario(@RequestHeader Map<String,String> headers,
                                                           @Valid @RequestBody UsuarioRequest usuarioRequest){
         return ResponseEntity.ok(usuarioService.agregarUsuario(headers,usuarioRequest));
+    }
+
+    @GetMapping("/{nickname}/existe")
+    public ResponseEntity<UsuarioExistenteResponse> existeUsuario(@RequestHeader Map<String,String> headers, @PathVariable String nickname){
+        return ResponseEntity.ok(usuarioService.existeUsuario(headers,nickname));
     }
 
     @GetMapping("/{nickname}")

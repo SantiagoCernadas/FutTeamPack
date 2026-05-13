@@ -1,5 +1,6 @@
 package com.zakneer.backend.service;
 
+import com.zakneer.backend.dto.UsuarioExistenteResponse;
 import com.zakneer.backend.dto.UsuarioRequest;
 import com.zakneer.backend.dto.UsuarioResponse;
 import com.zakneer.backend.entity.Rol;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -99,6 +101,13 @@ public class UsuarioService {
                 .nickname(usuarioEntity.getNickname())
                 .sobresAbiertos(usuarioEntity.getSobresAbiertos())
                 .imagen(uriImagenesUtils.getUrlImagen(usuarioEntity.getImagenEquipo()))
+                .build();
+    }
+
+    public UsuarioExistenteResponse existeUsuario(Map<String, String> headers, String nickname) {
+        return UsuarioExistenteResponse
+                .builder()
+                .existe(usuarioRepository.findByNickname(nickname).isPresent())
                 .build();
     }
 }

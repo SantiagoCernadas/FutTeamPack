@@ -1,25 +1,24 @@
 import { obtenerUsuario, obtenerEquiposPorUsuario } from './api.js'
+import { finalizarCarga, iniciarCarga } from './loader.js';
 
 const UrlObjeto = new URL(window.location.href);
 const nickname = UrlObjeto.searchParams.get('nickname');
 
-
+const contenedorPagina = document.querySelector('.contenedor-perfil-datos');
 await imprimirUsuarioPerfilUsuario(nickname);
-
 
 
 
 
 async function imprimirUsuarioPerfilUsuario(nickname) {
     try {
+        iniciarCarga(contenedorPagina);
         const usuarioResponse = await obtenerUsuario(nickname);
         document.getElementById('nickname-usuario').textContent = usuarioResponse.nickname;
         document.getElementById('nickname-usuario-equipos').textContent = usuarioResponse.nickname;
         document.getElementById('imagen-club').src = usuarioResponse.imagen;
         document.getElementById('cant-sobres-abiertos').textContent = usuarioResponse.sobresAbiertos;
-
     } catch (err) {
-        const contenedorPagina = document.querySelector('.contenedor-perfil-datos');
         contenedorPagina.innerHTML = "";
         const contenedorError = document.createElement('div');
         const numError = document.createElement('h2');
@@ -31,13 +30,17 @@ async function imprimirUsuarioPerfilUsuario(nickname) {
         contenedorPagina.appendChild(contenedorError);
         return;
     }
+    finally{
+        finalizarCarga(contenedorPagina);
+    }
     await imprimirEquiposUsuario(nickname);
 }
 
 async function imprimirEquiposUsuario(nickname) {
-     const contenedorEquipos = document.querySelector('.contenedor-equipos');
+    const contenedorEquipos = document.querySelector('.contenedor-equipos');
     try {
         contenedorEquipos.innerHTML = "";
+        iniciarCarga(contenedorEquipos);
         const equipoResponse = await obtenerEquiposPorUsuario(nickname);
         const equiposLista = equipoResponse.content;
         document.getElementById('cant-equipos-desbloqueados').textContent = equipoResponse.totalElements;
@@ -54,7 +57,7 @@ async function imprimirEquiposUsuario(nickname) {
             botonVerTodos.classList.add('boton-ver-todos');
             botonVerTodos.textContent = "Ver todos los equipos";
             botonVerTodos.addEventListener('click', () => {
-                window.location.href = "equipos_usuario.html?nickname=" + nickname + "&pagina=0&cantidad=5";
+                window.location.href = "equipos_usuario.html?nickname=" + nickname + "&pagina=1&cantidad=20";
             })
             contenedorEquipos.appendChild(botonVerTodos);
         }
@@ -70,5 +73,7 @@ async function imprimirEquiposUsuario(nickname) {
         tituloError.textContent = "No fue posible obtener los equipos."
         contenedorEquipos.appendChild(tituloError);
     }
-
+    finally{
+        finalizarCarga(contenedorEquipos);
+    }
 }

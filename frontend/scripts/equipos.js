@@ -1,14 +1,13 @@
-import { obtenerEquiposPorUsuario } from './api.js'
-import { iniciarCarga,finalizarCarga } from './loader.js';
+import { obtenerEquipos } from "./api.js";
+import { finalizarCarga, iniciarCarga } from "./loader.js";
 
 const UrlObjeto = new URL(window.location.href);
-const nickname = UrlObjeto.searchParams.get('nickname');
+
 let paginaActual = UrlObjeto.searchParams.get('pagina');
-let cantidadPorPagina = UrlObjeto.searchParams.get('cantidad');
+let cantidad = UrlObjeto.searchParams.get('cantidad');
 let totalPaginas = 0;
 
 
-document.getElementById('nombre_usuario').textContent = nickname;
 
 const contenedorEquipos = document.querySelector('.contenedor-equipos');
 
@@ -17,14 +16,15 @@ await imprimirPaginaEquipos(paginaActual-1);
 async function imprimirPaginaEquipos(pagina) {
     try {
         iniciarCarga(document.querySelector('main'));
-        const response = await obtenerEquiposPorUsuario(nickname, pagina, cantidadPorPagina);
+        const response = await obtenerEquipos(pagina, cantidad);
 
         paginaActual = response.number;
         totalPaginas = response.totalPages;
-
+        
         renderizarEquipos(response.content);
         actualizarControlesPaginacion();
-        history.pushState(null, "", "equipos_usuario.html?nickname="+nickname+"&pagina="+(paginaActual+1)+"&cantidad="+cantidadPorPagina);
+
+        history.pushState(null, "", "equipos.html?pagina="+(paginaActual+1)+"&cantidad="+cantidad);
     } catch (error) {
         console.error(error.message);
     }
@@ -48,12 +48,10 @@ function renderizarEquipos(listaEquipos) {
         const ligaPais = document.createElement('p');
         const pais = document.createElement('p');
         const tipoTier = document.createElement('p');
-        const cantidad = document.createElement('p');
-
+        
         nombreEquipo.textContent = equipo.nombre;
         ligaPais.textContent = equipo.liga.nombre + " ("+equipo.pais.nombre+")";
         tipoTier.textContent = "Tier: " + equipo.tier;
-        cantidad.textContent = "Cantidad: " + equipo.cantidad;
         
 
 
@@ -61,7 +59,6 @@ function renderizarEquipos(listaEquipos) {
         equipoHTML.appendChild(ligaPais);
 
         equipoHTML.appendChild(tipoTier);
-        equipoHTML.appendChild(cantidad);
         contenedorEquipos.appendChild(equipoHTML);
     });
 }

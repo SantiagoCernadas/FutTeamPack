@@ -43,8 +43,9 @@ public class SecurityConfig {
                             "/v3/api-docs/**"
                     ).permitAll();
                     auth.requestMatchers("/auth/login").permitAll();
-                    auth.requestMatchers("/usuario/*").permitAll();
+                    auth.requestMatchers("/usuario/**").permitAll();
                     auth.requestMatchers("/equipo/usuario/*").permitAll();
+                    auth.requestMatchers("/equipo/obtener").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> {

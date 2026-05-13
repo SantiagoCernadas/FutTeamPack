@@ -6,6 +6,7 @@ import com.zakneer.backend.exception.LogicaInvalidaException;
 import com.zakneer.backend.repository.*;
 import com.zakneer.backend.utils.JwtUtils;
 import com.zakneer.backend.utils.UriImagenesUtils;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -68,8 +69,14 @@ public class EquipoService {
                 builder()
                 .nombre(equipoEntity.getNombre())
                 .tier(equipoEntity.getTier().getTier())
-                .liga(equipoEntity.getLiga().getNombre())
-                .pais(equipoEntity.getLiga().getPais().getNombre())
+                .pais(new PaisResponse(
+                        equipoEntity.getLiga().getPais().getNombre(),
+                        uriImagenesUtils.getUrlImagen(equipoEntity.getLiga().getPais().getUriImagen())
+                ))
+                .liga(new LigaResponse(
+                        equipoEntity.getLiga().getNombre(),
+                        uriImagenesUtils.getUrlImagen(equipoEntity.getLiga().getUriImagen())
+                ))
                 .imagen(uriImagenesUtils.getUrlImagen(equipoEntity.getUriImagen()))
                 .build();
     }
@@ -96,6 +103,27 @@ public class EquipoService {
                 .tier(entity.getEquipo().getTier().getTier())
                 .imagen(uriImagenesUtils.getUrlImagen(entity.getEquipo().getUriImagen()))
                 .cantidad(entity.getCantidad())
+                .build()
+        );
+    }
+
+    public Page<EquipoResponse> getEquipos(Map<String, String> headers, int pagina, int cantidad) {
+        Pageable pageable = PageRequest.of(pagina,cantidad);
+
+        Page<EquipoEntity> listaEntity = equipoRepository.getEquipos(pageable);
+
+        return listaEntity.map(entity -> EquipoResponse.builder()
+                .nombre(entity.getNombre())
+                .pais(new PaisResponse(
+                        entity.getLiga().getPais().getNombre(),
+                        uriImagenesUtils.getUrlImagen(entity.getLiga().getPais().getUriImagen())
+                ))
+                .liga(new LigaResponse(
+                        entity.getLiga().getNombre(),
+                        uriImagenesUtils.getUrlImagen(entity.getUriImagen())
+                ))
+                .tier(entity.getTier().getTier())
+                .imagen(uriImagenesUtils.getUrlImagen(entity.getUriImagen()))
                 .build()
         );
     }

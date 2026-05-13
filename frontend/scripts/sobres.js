@@ -1,4 +1,5 @@
 import { getSobresDisponibles, abrirSobre } from "./api.js";
+import { iniciarCarga, finalizarCarga } from "./loader.js";
 
 
 const contenedor = document.querySelector('.contenedor-sobres');
@@ -11,44 +12,51 @@ async function sobresDisponibles() {
 }
 
 async function imprimirSobres() {
-    const listaSobres = await sobresDisponibles();
+    try {
+        contenedor.innerHTML = "";
+        iniciarCarga(contenedor);
+        const listaSobres = await sobresDisponibles();
 
-    contenedor.innerHTML = "";
 
-    listaSobres.forEach((sobre) => {
+        listaSobres.forEach((sobre) => {
 
-        const sobreHTML = document.createElement('div');
-        sobreHTML.classList.add('contenedor-sobre');
+            const sobreHTML = document.createElement('div');
+            sobreHTML.classList.add('contenedor-sobre');
 
-        // Título
-        const tituloSobre = document.createElement('h3');
-        const tipoSobre = sobre.tipoSobre.toLowerCase();
-        tituloSobre.textContent = "Sobre " + tipoSobre;
-        sobreHTML.appendChild(tituloSobre);
 
-        // Imagen
-        const imagen = document.createElement('img');
-        imagen.classList.add('imagen');
-        imagen.src = sobre.imagen;
-        sobreHTML.appendChild(imagen);
+            const tituloSobre = document.createElement('h3');
+            const tipoSobre = sobre.tipoSobre.toLowerCase();
+            tituloSobre.textContent = "Sobre " + tipoSobre;
+            sobreHTML.appendChild(tituloSobre);
 
-        // Contenedor de acción (Donde irá el cronómetro o el botón)
-        const areaAccion = document.createElement('div');
-        areaAccion.classList.add('area-accion');
 
-        // Lógica de disponibilidad inicial
-        // Asumiendo que 'sobre.tiempoRestante' viene en segundos desde el backend
-        let tiempoRestante = sobre.segundosRestantes;
+            const imagen = document.createElement('img');
+            imagen.classList.add('imagen');
+            imagen.src = sobre.imagen;
+            sobreHTML.appendChild(imagen);
 
-        if (tiempoRestante <= 0) {
-            mostrarBotonAbrir(areaAccion, tipoSobre);
-        } else {
-            iniciarCronometro(areaAccion, tiempoRestante, tipoSobre);
-        }
+            const areaAccion = document.createElement('div');
+            areaAccion.classList.add('area-accion');
 
-        sobreHTML.appendChild(areaAccion);
-        contenedor.appendChild(sobreHTML);
-    });
+            let tiempoRestante = sobre.segundosRestantes;
+
+            if (tiempoRestante <= 0) {
+                mostrarBotonAbrir(areaAccion, tipoSobre);
+            } else {
+                iniciarCronometro(areaAccion, tiempoRestante, tipoSobre);
+            }
+
+            sobreHTML.appendChild(areaAccion);
+            contenedor.appendChild(sobreHTML);
+        });
+    }
+    catch (err) {
+        console.error(err.message);
+    }
+    finally {
+        finalizarCarga(contenedor);
+    }
+
 }
 
 function iniciarCronometro(contenedor, segundos, tipoSobre) {
@@ -75,7 +83,7 @@ function iniciarCronometro(contenedor, segundos, tipoSobre) {
     pTiempo.textContent = formatearTiempo(segundos);
 }
 
-function mostrarBotonAbrir(contenedor, tipoSobre) {
+function mostrarBotonAbrir(contenedorBoton, tipoSobre) {
     const parrafo = document.createElement('p');
     parrafo.textContent = "Sobre ya disponible!";
     const boton = document.createElement('button');
@@ -83,14 +91,21 @@ function mostrarBotonAbrir(contenedor, tipoSobre) {
     boton.classList.add('boton-abrir-sobre');
     boton.onclick = async () => {
         try {
+            contenedor.innerHTML = "";
+            contenedorSobreAbierto.innerHTML = "";
+            listaSobre.style.display = 'flex';
+            iniciarCarga(listaSobre);
             const equiposSobre = await abrirSobre(tipoSobre);
             imprimirSobreAbierto(equiposSobre, tipoSobre);
         } catch (err) {
             alert(err.mensaje);
         }
+        finally{
+            finalizarCarga(listaSobre);
+        }
     };
-    contenedor.appendChild(parrafo);
-    contenedor.appendChild(boton);
+    contenedorBoton.appendChild(parrafo);
+    contenedorBoton.appendChild(boton);
 }
 
 function formatearTiempo(segundosTotales) {
@@ -102,8 +117,7 @@ function formatearTiempo(segundosTotales) {
 }
 
 function imprimirSobreAbierto(equiposSobre, tipoSobre) {
-    contenedor.innerHTML = "";
-    contenedorSobreAbierto.innerHTML = "";
+
 
     document.getElementById('nombre-sobre').textContent = "Sobre " + tipoSobre;
     equiposSobre.forEach((equipo) => {
@@ -116,6 +130,7 @@ function imprimirSobreAbierto(equiposSobre, tipoSobre) {
         equipoHTML.appendChild(imagenEquipo);
 
         const nombreEquipo = document.createElement('p');
+        nombreEquipo.classList.add('nombre_equipo');
         nombreEquipo.textContent = equipo.nombre;
         equipoHTML.appendChild(nombreEquipo);
 
@@ -141,7 +156,7 @@ function imprimirSobreAbierto(equiposSobre, tipoSobre) {
 
         equipoHTML.appendChild(cantidad);
 
-        if(equipo.cantidad == 1){
+        if (equipo.cantidad == 1) {
             const etiquetaNuevo = document.createElement('p');
             etiquetaNuevo.classList.add('etiqueta-desbloqueado');
             etiquetaNuevo.textContent = "¡Nuevo!";
@@ -150,7 +165,6 @@ function imprimirSobreAbierto(equiposSobre, tipoSobre) {
 
         contenedorSobreAbierto.appendChild(equipoHTML);
     })
-    listaSobre.style.display = 'flex';
 }
 
 document.getElementById('boton-sobre-aceptar').addEventListener('click', () => {

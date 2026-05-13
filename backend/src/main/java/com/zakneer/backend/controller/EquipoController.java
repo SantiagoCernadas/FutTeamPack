@@ -19,9 +19,14 @@ public class EquipoController {
     @Autowired
     private EquipoService equipoService;
 
-    @PostMapping
+    @PostMapping("/agregar")
     public ResponseEntity<EquipoResponse> agregarEquipo(@RequestHeader Map<String,String> headers, @Valid @RequestBody EquipoRequest equipoRequest) {
         return ResponseEntity.ok(equipoService.agregarEquipo(headers,equipoRequest));
+    }
+
+    @GetMapping("/obtener")
+    public ResponseEntity<Page<EquipoResponse>> obtenerEquipos(@RequestHeader Map<String,String> headers,@RequestParam(defaultValue = "0") int pagina, @RequestParam(defaultValue = "5") int cantidad){
+        return ResponseEntity.ok(equipoService.getEquipos(headers,pagina,cantidad));
     }
 
     @GetMapping("/usuario/{nickname}")

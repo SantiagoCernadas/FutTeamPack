@@ -11,7 +11,7 @@ function generarNav(){
         contenedor.appendChild(generarA("Mi perfil","perfil.html?nickname=" + nickname));
     }
     contenedor.appendChild(generarA("Abrir sobres","sobres.html"))
-    contenedor.appendChild(generarA("Equipos",""))
+    contenedor.appendChild(generarA("Equipos","equipos.html?pagina=1&cantidad=20"))
 
     if(nickname != null){
         const cerrarSesionA = generarA("Cerrar sesión","iniciar_sesion.html");

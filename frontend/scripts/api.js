@@ -1,5 +1,6 @@
 const BASE_URL = 'http://localhost:8080/';
 
+const UrlObjeto = new URL(window.location.href);
 
 async function callApi(endpoint, method = 'GET', body = null) {
     const token = getTokenCookie();
@@ -107,6 +108,27 @@ export async function obtenerUsuario(nickname) {
     }
 }
 
+export async function usuarioExiste(nickname) {
+    try{
+        const response = await callApi('usuario/' + nickname+'/existe', 'GET');
+        return response;
+    }
+    catch(err){
+        throw err;
+    }
+}
+
+export async function obtenerEquipos(pagina = 0,cantidad = 5) {
+    try{
+        const response = await callApi('equipo/obtener'+'?pagina='+pagina+'&cantidad='+cantidad, 'GET');
+        return response;
+    }
+    catch(err){
+        throw err;
+    }
+}
+
+
 export async function obtenerEquiposPorUsuario(nickname,pagina = 0,cantidad = 5) {
     try{
         const response = await callApi('equipo/usuario/' + nickname+"?pagina="+pagina+"&cantidad="+cantidad, 'GET');
@@ -116,4 +138,6 @@ export async function obtenerEquiposPorUsuario(nickname,pagina = 0,cantidad = 5)
         throw err;
     }
 }
+
+
 

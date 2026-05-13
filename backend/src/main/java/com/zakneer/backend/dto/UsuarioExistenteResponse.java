@@ -9,10 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EquipoResponse {
-    private String nombre;
-    private PaisResponse pais;
-    private LigaResponse liga;
-    private String tier;
-    private String imagen;
+public class UsuarioExistenteResponse {
+    private boolean existe;
 }
