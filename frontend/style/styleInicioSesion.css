@@ -97,3 +97,7 @@ button:active{
     width: 100px;
     padding: 5px 0px;
 }
+
+#mensaje-existe-usuario{
+    font-size: 15px;
+}

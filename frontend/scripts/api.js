@@ -48,6 +48,17 @@ export async function iniciarSesion(nickname,contrasenia) {
     }
 }
 
+export async function registrarse(nickname,contrasenia,confirmarContrasenia) {
+    const body = {nickname,contrasenia,confirmarContrasenia};
+    try{
+        const response = await callApi('usuario', 'POST', body);
+        return response;
+    }
+    catch(err){
+        throw err;
+    }
+}
+
 function setTokenCookie(token) {
     document.cookie = "session_token="+token+"; path=/; max-age=3600;SameSite=Strict";
 }
@@ -110,7 +121,7 @@ export async function obtenerUsuario(nickname) {
 
 export async function usuarioExiste(nickname) {
     try{
-        const response = await callApi('usuario/' + nickname+'/existe', 'GET');
+        const response = await callApi('usuario/'+nickname+'/existe', 'GET');
         return response;
     }
     catch(err){
