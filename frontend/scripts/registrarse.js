@@ -10,7 +10,30 @@ const contrasenia = document.getElementById('input_contrasenia');
 const confirmaContrasenia = document.getElementById('input_confirma_contrasenia');
 
 document.getElementById('boton-registrarse').addEventListener('click', async () => {
+    try{
+        if(nickname.value == ""){
+            setMensajeError("Ingresar nombre de usuario.");
+            return;
+        }
+        if(contrasenia.value == "" || confirmaContrasenia.value == ""){
+            setMensajeError("Ingresar contraseña.");
+            return;
+        }
+        if(contrasenia.value != confirmaContrasenia.value){
+            setMensajeError("Las contraseñas no son iguales.");
+            return;
+        }
 
+        iniciarCarga(document.querySelector('main'));
+        await registrarse(nickname.value,contrasenia.value,confirmaContrasenia.value);
+        document.querySelector('main').style.display = 'none';
+        document.querySelector('.usuario-registrado').style.display = 'flex';
+    }catch(err){
+        setMensajeError(err.mensaje);
+    }
+    finally{
+        finalizarCarga(document.querySelector('main'));
+    }
 })
 
 document.getElementById('boton-verificar-usuario').addEventListener('click', async () => {
@@ -30,11 +53,15 @@ document.getElementById('boton-verificar-usuario').addEventListener('click', asy
         }
     }
     catch(err){
-        setMensajeVerificacion("Error inessperado");
+        setMensajeVerificacion("Error inesperado");
     }
     finally{
         finalizarCarga(document.querySelector('main'));
     }
+})
+
+document.getElementById('boton_iniciar_sesion').addEventListener('click', () => {
+    location.replace("iniciar_sesion.html");
 })
 
 

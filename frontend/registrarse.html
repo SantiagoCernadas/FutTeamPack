@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,28 +8,36 @@
     <link rel="stylesheet" href="style/styleInicioSesion.css">
     <link rel="stylesheet" href="style/style.css">
 </head>
+
 <body>
-    
-    <main>
-        <h1>Registrarse</h1>
-        <div class="contenedor-input">
-            <p>Usuario</p>
-            <input type="text" id="input_usuario">
-            <button id="boton-verificar-usuario">verificar</button>
-            <p id="mensaje-existe-usuario"></p>
+    <div>
+        <main>
+            <h1>Registrarse</h1>
+            <div class="contenedor-input">
+                <p>Usuario</p>
+                <input type="text" id="input_usuario">
+                <button id="boton-verificar-usuario">verificar</button>
+                <p id="mensaje-existe-usuario"></p>
+            </div>
+            <div class="contenedor-input">
+                <p>Contraseña</p>
+                <input type="password" id="input_contrasenia" autocomplete="off">
+            </div>
+            <div class="contenedor-input">
+                <p>Confirmar contraseña</p>
+                <input type="password" id="input_confirma_contrasenia" autocomplete="off">
+            </div>
+            <button id="boton-registrarse">Registrarse</button>
+            <p id="mensaje-error"></p>
+            <p>¿Ya tienes cuenta? <a href="iniciar_sesion.html">Iniciar sesion</a></p>
+        </main>
+        <div class="usuario-registrado" style="display: none;">
+            <p>Usuario registrado correctamente.</p>
+            <button id="boton_iniciar_sesion">Iniciar sesion</button>
         </div>
-        <div class="contenedor-input">
-            <p>Contraseña</p>
-            <input type="text" id="input_contrasenia">
-        </div>
-        <div class="contenedor-input">
-            <p>Confirmar contraseña</p>
-            <input type="text" id="input_confirma_contrasenia">
-        </div>
-        <button id="boton-registrarse">Registrarse</button>
-        <p id="mensaje-error"></p>
-        <p>¿Ya tienes cuenta? <a href="iniciar_sesion.html">Iniciar sesion</a></p>
-    </main>
+    </div>
+
 </body>
 <script src="scripts/registrarse.js" type="module"></script>
+
 </html>

@@ -26,7 +26,7 @@ a:hover {
     color: #1C1917;
 }
 
-main {
+main, .usuario-registrado{
     background-color: #1C1917;
     width: 400px;
     padding: 20px 0px;

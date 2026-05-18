@@ -49,3 +49,7 @@ body{
     position: relative;
     min-height: 200px; /* Evita que el div colapse al vaciarse */
 }
+
+h1:hover{
+    cursor: pointer;
+}

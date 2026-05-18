@@ -4,6 +4,11 @@ function generarNav(){
     const contenedor = document.querySelector('nav');
     contenedor.innerHTML = "";
     const nickname = getNickFromToken(); 
+
+    document.querySelector('h1').addEventListener('click', () => {
+        window.location.href = "index.html";
+    });
+
     if(nickname == null){
         contenedor.appendChild(generarA("Iniciar sesion","iniciar_sesion.html"));
     }
