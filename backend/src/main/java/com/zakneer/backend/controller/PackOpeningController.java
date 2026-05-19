@@ -34,6 +34,11 @@ public class PackOpeningController {
         return ResponseEntity.ok(packService.abrirSobre(headers, TipoSobre.ESPECIAL));
     }
 
+    @PostMapping("/ultimate")
+    public ResponseEntity<List<EquipoUsuarioResponse>> abrirSobreUltimate(@RequestHeader Map<String,String> headers){
+        return ResponseEntity.ok(packService.abrirSobre(headers, TipoSobre.ULTIMATE));
+    }
+
 
     @GetMapping()
     public ResponseEntity<List<SobreResponse>> sobresDisponibles(@RequestHeader Map<String,String> headers){

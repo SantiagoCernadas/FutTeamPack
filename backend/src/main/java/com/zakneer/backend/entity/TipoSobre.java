@@ -1,14 +1,12 @@
 package com.zakneer.backend.entity;
 
-import com.zakneer.backend.dto.sobres.Sobre;
-import com.zakneer.backend.dto.sobres.SobreBasico;
-import com.zakneer.backend.dto.sobres.SobreComun;
-import com.zakneer.backend.dto.sobres.SobreEspecial;
+import com.zakneer.backend.dto.sobres.*;
 
 public enum TipoSobre {
-    BASICO(300,new SobreBasico()),
-    COMUN(3600, new SobreComun()),
-    ESPECIAL(86400,new SobreEspecial());
+    BASICO(60,new SobreBasico()),
+    COMUN(900, new SobreComun()),
+    ESPECIAL(7200,new SobreEspecial()),
+    ULTIMATE(86400, new SobreUltimate());
 
     private final long cooldownSegundos;
     private final Sobre sobre;
