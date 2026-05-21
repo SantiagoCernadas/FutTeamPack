@@ -3,7 +3,6 @@ package com.zakneer.backend.repository;
 import com.zakneer.backend.entity.AmistadEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,13 +18,31 @@ public interface AmistadRepository extends CrudRepository<AmistadEntity,Long> {
     List<AmistadEntity> findAmigosUsuario(Long id);
 
     @Query(value = "SELECT a FROM amistad a WHERE " +
-            "(a.id_usuario_envia = :id1 AND a.id_usuario_recibe = :id2) OR" +
-            "(a.id_usuario_envia = :id2 AND a.id_usuario_recibe = :id1)" +
+            "((a.id_usuario_envia = :id1 AND a.id_usuario_recibe = :id2) OR" +
+            "(a.id_usuario_envia = :id2 AND a.id_usuario_recibe = :id1))" +
             "AND a.estado = 'PENDIENTE'",nativeQuery = true)
-    Optional<AmistadEntity> findSolicitudPendiente(Long id1,Long id2);
+    Optional<AmistadEntity> findSolicitudPendienteAmistad(Long id1, Long id2);
+
+    @Query(value = "SELECT a FROM amistad a WHERE " +
+            "a.id_usuario_envia = :idEnvia AND a.id_usuario_recibe = :idRecibe" +
+            "AND a.estado = 'PENDIENTE'",nativeQuery = true)
+    Optional<AmistadEntity> findSolicitudPendienteUsuario(Long idEnvia,Long idRecibe);
+
+    @Query(value = "SELECT a FROM amistad a WHERE " +
+            "((a.id_usuario_envia = :id1 AND a.id_usuario_recibe = :id2) OR" +
+            "(a.id_usuario_envia = :id2 AND a.id_usuario_recibe = :id1))" +
+            "AND a.estado = 'ACEPTADA'",nativeQuery = true)
+    Optional<AmistadEntity> findSolicitudAceptada(Long id1,Long id2);
 
     @Query(value = "SELECT a FROM amistad a WHERE " +
             "(a.id_usuario_envia = :id1 AND a.id_usuario_recibe = :id2)" +
             "AND a.estado = 'RECHAZADA'",nativeQuery = true)
     List<AmistadEntity> findSolicitudesRechazadas(Long id1,Long id2);
+
+    @Query(value = "SELECT a FROM amistad a WHERE " +
+            "(a.id_usuario_recibe = :id)" +
+            "AND a.estado = 'PENDIENTE'",nativeQuery = true)
+    List<AmistadEntity> findSolicitudesRecibidasPendientesUsuario(Long id);
+
+
 }

@@ -1,7 +1,9 @@
 package com.zakneer.backend.service;
 
+import com.zakneer.backend.dto.AmistadSolicitudRequest;
 import com.zakneer.backend.dto.UsuarioResponse;
 import com.zakneer.backend.entity.AmistadEntity;
+import com.zakneer.backend.entity.EstadoAmistad;
 import com.zakneer.backend.entity.UsuarioEntity;
 import com.zakneer.backend.exception.LogicaInvalidaException;
 import com.zakneer.backend.repository.AmistadRepository;
@@ -10,6 +12,7 @@ import com.zakneer.backend.utils.JwtUtils;
 import com.zakneer.backend.utils.UriImagenesUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -23,22 +26,6 @@ public class AmistadService {
     private JwtUtils jwtUtils;
     @Autowired
     private UriImagenesUtils uriImagenesUtils;
-
-    //Que necesito analizar:
-    /*
-     * 1: listar de amigos de un usuario.
-     *
-     * 2:cargar solicitud de amistad (save)
-     * 2.1: verificar que el usuario no se este automandando una solicitud de amistad (XD)
-     * 2.2: verificar si ya es amigo del usuario al cual le envio solicitud (Si es asi, no se cargara la solicitud)
-     * 2.3: Verificar que el usuario no haya enviado ya una solicitud a el usuario y este en "Pendiente"
-     * 2.4: en caso de que el usuario lo haya rechazado ya 3 veces, no puede volver a enviarle solicitud de amistad.
-     * 2.5: si esta todo bien, se cargara la solicitud y se enviara la misma al usuario receptor.
-     *
-     * 3: listar solicitudes de amistad.
-     * 3.1: si el usuario acepta la solicitud, podra ver el mismo en su lista de amigos tanto el como el emisor.
-     * 3.2: si la rechaza, visualmente no pasara nada. Pero desaparecera la solicitud y en la base quedara como "Rechazada".
-     * */
 
     public List<UsuarioResponse> listarAmigos(Map<String,String> headers){
         String token = headers.get("Authorization").substring(7);
@@ -71,6 +58,30 @@ public class AmistadService {
         return response;
     }
 
+    public List<UsuarioResponse> listarSolicitudesPendientes(Map<String,String> headers){
+        String token = headers.get("Authorization").substring(7);
+        String nickname = jwtUtils.getNicknameFromToken(token);
+        UsuarioEntity usuarioEntity = usuarioRepository.findByNickname(nickname)
+                .orElseThrow(() -> new NoSuchElementException("No se encontro un usuario con en nick: " + nickname));
+
+        List<AmistadEntity> solicitudes = amistadRepository
+                .findSolicitudesRecibidasPendientesUsuario(usuarioEntity.getId());
+
+        List<UsuarioResponse> response = new ArrayList<>();
+
+        for (AmistadEntity amistadEntity : solicitudes){
+            response.add(UsuarioResponse.
+                    builder().
+                    nickname(amistadEntity.getUsuarioEnvia().getNickname()).
+                    sobresAbiertos(amistadEntity.getUsuarioEnvia().getSobresAbiertos()).
+                    imagen(uriImagenesUtils.getUrlImagen(amistadEntity.getUsuarioEnvia().getImagenEquipo())).
+                    build());
+        }
+
+        return response;
+    }
+
+    @Transactional
     public void enviarSolicitudAmistad(Map<String,String> headers,String usuarioReceptor){
         String token = headers.get("Authorization").substring(7);
         String nickname = jwtUtils.getNicknameFromToken(token);
@@ -84,15 +95,68 @@ public class AmistadService {
         UsuarioEntity usuarioEntityReceptor = usuarioRepository.findByNickname(usuarioReceptor)
                 .orElseThrow(() -> new NoSuchElementException("No se encontro un usuario con en nick: " + usuarioReceptor));
 
-        if (amistadRepository.findSolicitudPendiente(usuarioEntity.getId(),usuarioEntityReceptor.getId()).isPresent()){
+        if (amistadRepository.findSolicitudAceptada(usuarioEntity.getId(),usuarioEntityReceptor.getId()).isPresent()){
+            throw new LogicaInvalidaException("Ya tienes agregado a este usuario.");
+        }
+
+        if (amistadRepository.findSolicitudPendienteAmistad(usuarioEntity.getId(),usuarioEntityReceptor.getId()).isPresent()){
             throw new LogicaInvalidaException("Ya existe una solicitud de amistad en curso.");
         }
-        
+
         int cantRechazos = amistadRepository
                 .findSolicitudesRechazadas(usuarioEntity.getId(),usuarioEntityReceptor.getId()).size();
 
         if (cantRechazos >= 3){
             throw new LogicaInvalidaException("Ya no es posible enviarle solicitudes a este usuario.");
         }
+        amistadRepository.save(AmistadEntity
+                .builder().usuarioEnvia(usuarioEntity)
+                        .usuarioEnvia(usuarioEntityReceptor)
+                        .estado(EstadoAmistad.PENDIENTE)
+                .build());
+    }
+
+    @Transactional
+    public UsuarioResponse responderSolicitudAmistad(Map<String,String> headers, AmistadSolicitudRequest amistadSolicitudRequest){
+        String token = headers.get("Authorization").substring(7);
+        String nickname = jwtUtils.getNicknameFromToken(token);
+        UsuarioEntity usuarioEntityResponde = usuarioRepository.findByNickname(nickname)
+                .orElseThrow(() -> new NoSuchElementException("No se encontro un usuario con en nick: " + nickname));
+
+        if (nickname.equals(amistadSolicitudRequest.getUsuarioAmistad())){
+            throw new LogicaInvalidaException("No puedes agregarte a ti mismo.");
+        }
+
+        UsuarioEntity usuarioEntityEnvia = usuarioRepository.findByNickname(amistadSolicitudRequest.getUsuarioAmistad())
+                .orElseThrow(() -> new NoSuchElementException("No se encontro un usuario con en nick: " + amistadSolicitudRequest.getUsuarioAmistad()));
+
+
+        if (amistadRepository.findSolicitudAceptada(usuarioEntityResponde.getId(),usuarioEntityEnvia.getId()).isPresent()){
+            throw new LogicaInvalidaException("Ya tienes agregado a este usuario.");
+        }
+
+        Optional<AmistadEntity> amistadEntity = amistadRepository.
+                findSolicitudPendienteUsuario(usuarioEntityEnvia.getId(), usuarioEntityResponde.getId());
+
+        if (amistadEntity.isEmpty()){
+            throw new LogicaInvalidaException("No tienes solicitudes pendientes del usuario indicado.");
+        }
+
+        AmistadEntity solicitud = amistadEntity.get();
+        if (amistadSolicitudRequest.isRespuesta()){
+            solicitud.setEstado(EstadoAmistad.ACEPTADA);
+        }
+        else {
+            solicitud.setEstado(EstadoAmistad.RECHAZADA);
+        }
+
+        amistadRepository.save(solicitud);
+
+        return UsuarioResponse.
+                builder().
+                nickname(usuarioEntityEnvia.getNickname()).
+                sobresAbiertos(usuarioEntityEnvia.getSobresAbiertos()).
+                imagen(uriImagenesUtils.getUrlImagen(usuarioEntityEnvia.getImagenEquipo())).
+                build();
     }
 }

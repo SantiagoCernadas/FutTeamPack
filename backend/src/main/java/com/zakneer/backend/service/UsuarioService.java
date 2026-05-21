@@ -14,6 +14,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -31,6 +32,7 @@ public class UsuarioService {
     @Autowired
     private UriImagenesUtils uriImagenesUtils;
 
+    @Transactional
     public UsuarioResponse agregarUsuario(Map<String,String> headers, UsuarioRequest usuarioRequest){
         if (usuarioRepository.findByNickname(usuarioRequest.getNickname()).isPresent()){
             throw new LogicaInvalidaException("Ya existe un usuario con nombre de usuario: " + usuarioRequest.getNickname());
