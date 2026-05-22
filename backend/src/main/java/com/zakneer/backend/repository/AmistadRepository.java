@@ -40,7 +40,7 @@ public interface AmistadRepository extends CrudRepository<AmistadEntity,Long> {
     List<AmistadEntity> findSolicitudesRechazadas(Long id1,Long id2);
 
     @Query(value = "SELECT a FROM amistad a WHERE " +
-            "(a.id_usuario_recibe = :id)" +
+            "a.id_usuario_recibe = :id" +
             "AND a.estado = 'PENDIENTE'",nativeQuery = true)
     List<AmistadEntity> findSolicitudesRecibidasPendientesUsuario(Long id);
 

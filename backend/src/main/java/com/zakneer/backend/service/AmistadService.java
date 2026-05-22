@@ -27,7 +27,7 @@ public class AmistadService {
     @Autowired
     private UriImagenesUtils uriImagenesUtils;
 
-    public List<UsuarioResponse> listarAmigos(Map<String,String> headers){
+    public List<UsuarioResponse> getAmigosUsuario(Map<String,String> headers){
         String token = headers.get("Authorization").substring(7);
         String nickname = jwtUtils.getNicknameFromToken(token);
         UsuarioEntity usuarioEntity = usuarioRepository.findByNickname(nickname)
@@ -58,7 +58,7 @@ public class AmistadService {
         return response;
     }
 
-    public List<UsuarioResponse> listarSolicitudesPendientes(Map<String,String> headers){
+    public List<UsuarioResponse> getSolicitudesAmistadPendientes(Map<String,String> headers){
         String token = headers.get("Authorization").substring(7);
         String nickname = jwtUtils.getNicknameFromToken(token);
         UsuarioEntity usuarioEntity = usuarioRepository.findByNickname(nickname)
