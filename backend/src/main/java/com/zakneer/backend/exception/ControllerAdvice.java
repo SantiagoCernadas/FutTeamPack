@@ -132,7 +132,7 @@ public class ControllerAdvice {
         ErrorResponse error = ErrorResponse.builder()
                 .error("ERROR INTERNO.")
                 .estado(500)
-                .mensaje("Error inesperado en el servidor.")
+                .mensaje(ex.getMessage())
                 .ruta(path)
                 .tiempo(LocalDateTime.now())
                 .build();

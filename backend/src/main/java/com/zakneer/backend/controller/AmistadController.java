@@ -3,6 +3,7 @@ package com.zakneer.backend.controller;
 import com.zakneer.backend.dto.AmistadSolicitudRequest;
 import com.zakneer.backend.dto.UsuarioResponse;
 import com.zakneer.backend.service.AmistadService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,8 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/amistad")
 public class AmistadController {
+
+    @Autowired
     private AmistadService amistadService;
 
     @GetMapping()

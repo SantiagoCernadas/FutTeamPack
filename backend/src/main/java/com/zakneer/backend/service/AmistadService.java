@@ -88,7 +88,7 @@ public class AmistadService {
         UsuarioEntity usuarioEntity = usuarioRepository.findByNickname(nickname)
                 .orElseThrow(() -> new NoSuchElementException("No se encontro un usuario con en nick: " + nickname));
 
-        if (nickname.equals(usuarioReceptor)){
+        if (nickname.equalsIgnoreCase(usuarioReceptor)){
             throw new LogicaInvalidaException("No puedes agregarte a ti mismo.");
         }
 
@@ -100,7 +100,7 @@ public class AmistadService {
         }
 
         if (amistadRepository.findSolicitudPendienteAmistad(usuarioEntity.getId(),usuarioEntityReceptor.getId()).isPresent()){
-            throw new LogicaInvalidaException("Ya existe una solicitud de amistad en curso.");
+            throw new LogicaInvalidaException("Ya existe una solicitud de amistad con este usuario en curso.");
         }
 
         int cantRechazos = amistadRepository
@@ -109,9 +109,17 @@ public class AmistadService {
         if (cantRechazos >= 3){
             throw new LogicaInvalidaException("Ya no es posible enviarle solicitudes a este usuario.");
         }
+
+        int cantSolicitudesReceptor = amistadRepository
+                .findSolicitudesRecibidasPendientesUsuario(usuarioEntityReceptor.getId()).size();
+
+        if (cantSolicitudesReceptor >= 20){
+            throw new LogicaInvalidaException("El usuario tiene la bandeja llena. Pidele que rechaze o acepte solicitudes actuales.");
+        }
+
         amistadRepository.save(AmistadEntity
                 .builder().usuarioEnvia(usuarioEntity)
-                        .usuarioEnvia(usuarioEntityReceptor)
+                        .usuarioRecibe(usuarioEntityReceptor)
                         .estado(EstadoAmistad.PENDIENTE)
                 .build());
     }
