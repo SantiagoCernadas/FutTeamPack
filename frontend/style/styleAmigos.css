@@ -1,0 +1,96 @@
+main{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content:center;
+    margin-top: 20px;
+    width: 500px;
+    text-align: center;
+}
+
+.contenedor{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: #1C1917;
+    border: 2px solid #FFFF00;
+    border-radius: 20px;
+    padding: 20px 30px;
+    text-align: center;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.contenedor-peticiones{
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+h2{
+    color: white;
+}
+
+button{
+    background-color: #1C1917;
+    border: 1px solid #FFFF00;
+    padding: 5px 10px;
+    font-size: 20px;
+    border-radius: 20px;
+    color: white;
+}
+
+button:hover{
+    cursor: pointer;
+    transform: scale(0.95);
+    transition: transform .1s;
+    background-color: #FFFF00;
+    color: black;
+}
+
+button:active{
+    transform: scale(0.90);
+    background-color: #FFFF00;
+    color: black;
+}
+
+input{
+    background-color: #1C1917;
+    border: 1px solid #FFFF00;
+    padding: 5px;
+    font-size: 20px;
+    border-radius: 5px;
+    color: white;
+    outline: none;
+}
+
+.contenedor-amigo, .solicitud{
+    display: flex;
+    gap: 10px;
+    border: 2px solid white;
+    border-radius: 20px;
+    align-items: center;
+    color: white;
+    justify-content: space-evenly;
+}
+
+.contenedor-amigo p, .solicitud p{
+    font-size: 20px;
+    width: 80px;
+}
+
+.contenedor-amigo img, .solicitud img{
+    width: 60px;
+}
+
+.solicitudes{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+@media screen and (max-width: 768px) {
+    main{
+        width: 95%;
+    }
+
+}
