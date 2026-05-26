@@ -1,11 +1,12 @@
 main{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 20px;
     justify-content:center;
-    margin-top: 20px;
-    width: 500px;
+    margin: 20px 0px;
+    flex-wrap: wrap;
     text-align: center;
+    align-items: flex-start;
 }
 
 .contenedor{
@@ -13,9 +14,8 @@ main{
     flex-direction: column;
     gap: 8px;
     background-color: #1C1917;
-    border: 2px solid #FFFF00;
     border-radius: 20px;
-    padding: 20px 30px;
+    padding: 20px 10px;
     text-align: center;
     overflow-wrap: break-word;
     word-wrap: break-word;
@@ -30,12 +30,16 @@ h2{
     color: white;
 }
 
+h3{
+    color: white;
+}
+
 button{
     background-color: #1C1917;
     border: 1px solid #FFFF00;
     padding: 5px 10px;
-    font-size: 20px;
-    border-radius: 20px;
+    font-size: 15px;
+    border-radius: 10px;
     color: white;
 }
 
@@ -63,34 +67,49 @@ input{
     outline: none;
 }
 
+#boton-ver-solicitudes{
+    font-size: 20px;
+}
+
 .contenedor-amigo, .solicitud{
     display: flex;
     gap: 10px;
-    border: 2px solid white;
-    border-radius: 20px;
+    border: 1px solid #FFFF00;
+    border-radius: 10px;
+    padding: 0px 10px;
     align-items: center;
-    color: white;
     justify-content: space-evenly;
+    color: white;
+    
 }
 
 .contenedor-amigo p, .solicitud p{
-    font-size: 20px;
+    font-size: 18px;
     width: 80px;
 }
 
 .contenedor-amigo img, .solicitud img{
-    width: 60px;
+    width: 80px;
 }
 
-.solicitudes{
+.solicitudes, .amistades{
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
 }
 
-@media screen and (max-width: 768px) {
-    main{
-        width: 95%;
-    }
+.boton-aceptar{
+    border: 1px solid #18E767;
+}
 
+.boton-aceptar:hover{
+    background-color: #18E767;
+}
+
+.boton-rechazar, .boton-eliminar{
+    border: 1px solid #FF2E51;
+}
+
+.boton-rechazar:hover, .boton-eliminar:hover{
+    background-color: #FF2E51;
 }

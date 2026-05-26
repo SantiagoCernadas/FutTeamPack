@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="style/styleAmigos.css">
 </head>
 <script src="scripts/generarNav.js" type="module"></script>
+<script src="scripts/verificarCredenciales.js" type="module"></script>
 
 <body>
     <header>
@@ -19,53 +20,56 @@
         </nav>
     </header>
     <main>
-        <div class="contenedor agregar-amigo">
-            <h2>Agregar amigo</h2>
-            <div>
-                <input type="text" name="" id="">
-                <button>Enviar</button>
-            </div>
-        </div>
-        <div class="contenedor solicitudes-pendientes">
-            <button id="boton-ver-solicitudes">Ver solicitudes pendientes</button>
-            <div class="solicitudes">
-                <div class="solicitud">
-                    <img src="https://res.cloudinary.com/dmcdgwhom/image/upload/v1779152848/almagro.png" alt="">
-                    <p>usuario</p>
-                    <button>Aceptar</button>
-                    <button>Rechazar</button>
-                </div>
-                <div class="solicitud">
-                    <img src="https://res.cloudinary.com/dmcdgwhom/image/upload/v1779152848/almagro.png" alt="">
-                    <p>usuariasdsadasdsadsadsadsadsads</p>
-                    <button>Aceptar</button>
-                    <button>Rechazar</button>
-                </div>
-            </div>
-        </div>
+
 
         <div class="contenedor amigos">
-            <h2>Amigos </h2>
-            <div class="contenedor-amigo">
-                <img src="https://res.cloudinary.com/dmcdgwhom/image/upload/v1779152848/almagro.png" alt="">
-                <p>Usuario sdfjkldsjfklñsdjfñk</p>
-                <button>Ver perfil</button>
-                <button>Eliminar</button>
+            <h2>Amigos</h2>
+            <div class="amistades">
+                <div class="contenedor-amigo">
+                    <img src="https://res.cloudinary.com/dmcdgwhom/image/upload/v1779152848/almagro.png" alt="">
+                    <p>Usuariosdfjkldsjfklñsdjfñk</p>
+                    <button>Ver perfil</button>
+                    <button class="boton-eliminar">Eliminar</button>
+                </div>
+                <div class="contenedor-amigo">
+                    <img src="https://res.cloudinary.com/dmcdgwhom/image/upload/v1779152848/almagro.png" alt="">
+                    <p>Usuario</p>
+                    <button>Ver perfil</button>
+                    <button class="boton-eliminar">Eliminar</button>
+                </div>
+                <div class="contenedor-amigo">
+                    <img src="https://res.cloudinary.com/dmcdgwhom/image/upload/v1779152848/almagro.png" alt="">
+                    <p>Usuario</p>
+                    <button>Ver perfil</button>
+                    <button class="boton-eliminar">Eliminar</button>
+                </div>
             </div>
-            <div class="contenedor-amigo">
-                <img src="https://res.cloudinary.com/dmcdgwhom/image/upload/v1779152848/almagro.png" alt="">
-                <p>Usuario</p>
-                <button>Ver perfil</button>
-                <button>Eliminar</button>
+
+        </div>
+
+        <div class="contenedor solicitud-amistad">
+            <div>
+                <h2>Agregar amigo</h2>
+                <div>
+                    <input type="text" name="" id="">
+                    <button>Enviar</button>
+                </div>
             </div>
-            <div class="contenedor-amigo">
-                <img src="https://res.cloudinary.com/dmcdgwhom/image/upload/v1779152848/almagro.png" alt="">
-                <p>Usuario</p>
-                <button>Ver perfil</button>
-                <button>Eliminar</button>
+            <div>
+                <h3>Solicitudes pendientes</h3>
+                <div class="solicitudes">
+                    <div class="solicitud">
+                        <img src="https://res.cloudinary.com/dmcdgwhom/image/upload/v1779152848/almagro.png" alt="">
+                        <p>usuario</p>
+                        <button class="boton-aceptar">Aceptar</button>
+                        <button class="boton-rechazar">Rechazar</button>
+                    </div>
+                </div>
+
+
             </div>
         </div>
     </main>
 </body>
-
+<script src="scripts/amigos.js" type="module"></script>
 </html>
