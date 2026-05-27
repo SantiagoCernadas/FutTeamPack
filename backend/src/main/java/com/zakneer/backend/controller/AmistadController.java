@@ -24,6 +24,13 @@ public class AmistadController {
         return ResponseEntity.ok(amistadService.getAmigosUsuario(headers));
     }
 
+    @DeleteMapping("/{nickname}")
+    public ResponseEntity<Object> eliminarUsuario(@RequestHeader Map<String,String> headers,
+                                                  @PathVariable String nickname){
+        amistadService.eliminarUsuario(headers,nickname);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
     @GetMapping("/solicitud")
     public ResponseEntity<List<UsuarioResponse>> getSolicitudesAmistadPendientes(@RequestHeader Map<String,String> headers){
         return ResponseEntity.ok(amistadService.getSolicitudesAmistadPendientes(headers));

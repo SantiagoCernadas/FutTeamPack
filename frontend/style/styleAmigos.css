@@ -96,6 +96,7 @@ input{
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 450px;
 }
 
 .boton-aceptar{
@@ -112,4 +113,10 @@ input{
 
 .boton-rechazar:hover, .boton-eliminar:hover{
     background-color: #FF2E51;
+}
+
+.contenedor-solicitudes, .contenedor-agregar{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }

@@ -167,4 +167,8 @@ public class AmistadService {
                 imagen(uriImagenesUtils.getUrlImagen(usuarioEntityEnvia.getImagenEquipo())).
                 build();
     }
+
+    public void eliminarUsuario(Map<String, String> headers, String nickname) {
+
+    }
 }
