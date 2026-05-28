@@ -168,7 +168,24 @@ public class AmistadService {
                 build();
     }
 
-    public void eliminarUsuario(Map<String, String> headers, String nickname) {
+    public void eliminarUsuario(Map<String, String> headers, String usuarioEliminar) {
+        String token = headers.get("Authorization").substring(7);
+        String nickname = jwtUtils.getNicknameFromToken(token);
+        UsuarioEntity usuarioEntity = usuarioRepository.findByNickname(nickname)
+                .orElseThrow(() -> new NoSuchElementException("No se encontro un usuario con en nick: " + nickname));
 
+        if (nickname.equalsIgnoreCase(usuarioEliminar)){
+            throw new LogicaInvalidaException("No puedes eliminarte a ti mismo.");
+        }
+
+        UsuarioEntity usuarioEntityEliminar = usuarioRepository.findByNickname(usuarioEliminar)
+                .orElseThrow(() -> new NoSuchElementException("No se encontro un usuario con en nick: " + usuarioEliminar));
+
+        Optional<AmistadEntity> amistad = amistadRepository.findSolicitudAceptada(usuarioEntity.getId(),usuarioEntityEliminar.getId());
+
+        if (amistad.isEmpty()){
+            throw new LogicaInvalidaException("No tienes agregado a este usuario.");
+        }
+        amistadRepository.delete(amistad.get());
     }
 }
