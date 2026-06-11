@@ -1,4 +1,4 @@
-import { enviarSolicitudAmistad, obtenerAmigosUsuario,obtenerSolicitudesUsuario } from './api.js';
+import { enviarSolicitudAmistad, obtenerAmigosUsuario,obtenerSolicitudesUsuario, responderSolicitudAmistad } from './api.js';
 import { finalizarCarga, iniciarCarga } from "./loader.js";
 
 
@@ -77,8 +77,16 @@ function generarBotonAceptar(nickname){
     boton.classList.add('boton-aceptar')
     boton.textContent = "Aceptar"
 
-    boton.addEventListener('click', () => {
-        alert("Aceptar");
+    boton.addEventListener('click', async () => {
+        try{
+            boton.parentElement.classList.add('elemento-bloqueado');
+            await responderSolicitudAmistad(nickname,true);
+            boton.parentElement.parentElement.remove(boton.parentElement);
+        }catch(err){
+            alert("no fue posible rechazar la solicitud: " + err.mensaje);
+            boton.parentElement.classList.remove('elemento-bloqueado');
+        }
+        
     })
 
     return boton;
@@ -89,8 +97,16 @@ function generarBotonRechazar(nickname){
     boton.classList.add('boton-rechazar')
     boton.textContent = "Rechazar"
 
-    boton.addEventListener('click', () => {
-        alert("Rechazar");
+    boton.addEventListener('click', async () => {
+        try{
+            boton.parentElement.classList.add('elemento-bloqueado');
+            await responderSolicitudAmistad(nickname,false);
+            boton.parentElement.parentElement.remove(boton.parentElement);
+        }catch(err){
+            alert("no fue posible rechazar la solicitud: " + err.mensaje);
+            boton.parentElement.classList.remove('elemento-bloqueado');
+        }
+        
     })
 
     return boton;
@@ -151,13 +167,16 @@ async function enviarSolicitudDeAmistad(nickSolicitud){
     const contenedor = document.querySelector('.contenedor-agregar');
     
     try{
-        iniciarCarga(contenedor);
+        contenedor.classList.add('elemento-bloqueado');
         await enviarSolicitudAmistad(nickSolicitud);
+        document.getElementById('mensaje-aviso-agregar').style.color = "#18E767";
+        document.getElementById('mensaje-aviso-agregar').textContent = 'Solicitud enviada!';
     } catch (err){
+        document.getElementById('mensaje-aviso-agregar').style.color = "#FF2E51";
         document.getElementById('mensaje-aviso-agregar').textContent = err.mensaje;
     }
     finally{
-        finalizarCarga(contenedor);
+        contenedor.classList.remove('elemento-bloqueado');
     }
 }
 

@@ -53,3 +53,8 @@ body{
 h1:hover{
     cursor: pointer;
 }
+
+.elemento-bloqueado {
+    pointer-events: none;
+    opacity: 0.5;
+}
