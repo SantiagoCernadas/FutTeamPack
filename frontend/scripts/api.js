@@ -150,7 +150,6 @@ export async function obtenerEquiposPorUsuario(nickname,pagina = 0,cantidad = 5)
     }
 }
 
-
 export async function obtenerAmigosUsuario() {
     try{
         const response = await callApi('amistad', 'GET');
@@ -171,3 +170,21 @@ export async function obtenerSolicitudesUsuario() {
     }
 }
 
+export async function enviarSolicitudAmistad(nickname) {
+    try{
+        await callApi('amistad/solicitud/enviar/'+nickname, 'POST');
+    }
+    catch(err){
+        throw err;
+    }
+}
+
+export async function responderSolicitudAmistad(usuarioAmistad,respuesta){
+    const body = {usuarioAmistad,respuesta};
+    try{
+        await callApi('amistad/solicitud/responder','POST',body);
+    }
+    catch(err){
+        throw err;
+    }
+}

@@ -37,7 +37,7 @@ public class AmistadController {
     }
 
     @PostMapping("/solicitud/enviar/{nickname}")
-    public ResponseEntity<Object> getSolicitudesAmistadPendientes
+    public ResponseEntity<Object> enviarSolicitudAmistad
             (@RequestHeader Map<String,String> headers,
              @PathVariable  String nickname){
         amistadService.enviarSolicitudAmistad(headers,nickname);
@@ -45,7 +45,7 @@ public class AmistadController {
     }
 
     @PostMapping("/solicitud/responder")
-    public ResponseEntity<UsuarioResponse> getSolicitudesAmistadPendientes
+    public ResponseEntity<UsuarioResponse> responderSolicitudAmistad
             (@RequestHeader Map<String,String> headers,
              @RequestBody AmistadSolicitudRequest request){
         return ResponseEntity.ok(amistadService.responderSolicitudAmistad(headers,request));

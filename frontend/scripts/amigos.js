@@ -1,4 +1,4 @@
-import { obtenerAmigosUsuario,obtenerSolicitudesUsuario } from './api.js';
+import { enviarSolicitudAmistad, obtenerAmigosUsuario,obtenerSolicitudesUsuario } from './api.js';
 import { finalizarCarga, iniciarCarga } from "./loader.js";
 
 
@@ -136,4 +136,33 @@ async function imprimirSolicitudesUsuario() {
     finally {
         finalizarCarga(contenedor);
     }
+}
+
+document.getElementById('boton-enviar-solicitud').addEventListener('click', async () => {
+    const nickSolicitud = document.getElementById('input-nick-solicitud').value;
+    if(nickSolicitud == ""){
+        document.getElementById('mensaje-aviso-agregar').textContent = "Ingresar usuario";
+        return;
+    }
+    await enviarSolicitudDeAmistad(nickSolicitud);
+});
+
+async function enviarSolicitudDeAmistad(nickSolicitud){
+    const contenedor = document.querySelector('.contenedor-agregar');
+    
+    try{
+        iniciarCarga(contenedor);
+        await enviarSolicitudAmistad(nickSolicitud);
+    } catch (err){
+        document.getElementById('mensaje-aviso-agregar').textContent = err.mensaje;
+    }
+    finally{
+        finalizarCarga(contenedor);
+    }
+}
+
+document.getElementById('input-nick-solicitud').addEventListener('input',limpiarMensajeNoti);
+
+function limpiarMensajeNoti(event){
+    document.getElementById('mensaje-aviso-agregar').textContent = "";
 }

@@ -120,3 +120,11 @@ input{
     flex-direction: column;
     gap: 5px;
 }
+
+#mensaje-aviso-agregar{
+    align-self: center;
+    max-width: 400px;
+    overflow: hidden;
+    color: #FF2E51;
+    font-weight: bold;
+}
