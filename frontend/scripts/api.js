@@ -188,3 +188,13 @@ export async function responderSolicitudAmistad(usuarioAmistad,respuesta){
         throw err;
     }
 }
+
+export async function eliminarUsuario(nickname){
+    try{
+        const response = await callApi('amistad/'+nickname, 'DELETE');
+        return response;
+    }
+    catch(err){
+        throw err;
+    }
+}
