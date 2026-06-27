@@ -2,16 +2,29 @@ import { eliminarUsuario, enviarSolicitudAmistad, obtenerAmigosUsuario, obtenerS
 import { finalizarCarga, iniciarCarga } from "./loader.js";
 
 
-await imprimirAmigosUsuario();
-await imprimirSolicitudesUsuario();
+await imprimirAmigosUsuario(true);
+await imprimirSolicitudesUsuario(true);
+
+setInterval(() => {
+    imprimirAmigosUsuario(false);
+    imprimirSolicitudesUsuario(false);
+}, 4000);
 
 
-async function imprimirAmigosUsuario() {
+
+
+async function imprimirAmigosUsuario(carga = true) {
     const contenedor = document.querySelector('.amistades');
-    contenedor.innerHTML = "";
-    try {
+
+    if (carga) {
         iniciarCarga(contenedor);
+    }
+
+    try {
         const amigos = await obtenerAmigosUsuario();
+
+        contenedor.innerHTML = "";
+
         if (amigos.length == 0) {
             const textoSinAmigos = document.createElement('h3');
             textoSinAmigos.textContent = "Actualmente no tienes amigos."
@@ -41,13 +54,14 @@ async function imprimirAmigosUsuario() {
             });
         }
     } catch (err) {
-        alert(err.mensaje);
+        console.error(err.mensaje);
     }
     finally {
-        finalizarCarga(contenedor);
+        if (carga) {
+            finalizarCarga(contenedor);
+        }
     }
 }
-
 
 
 function generarBotonPerfil(nickname) {
@@ -137,12 +151,15 @@ function generarBotonRechazar(nickname) {
     return boton;
 }
 
-async function imprimirSolicitudesUsuario() {
+async function imprimirSolicitudesUsuario(carga = false) {
     const contenedor = document.querySelector('.solicitudes');
-    contenedor.innerHTML = "";
-    try {
+    if (carga) {
         iniciarCarga(contenedor);
+    }
+    try {
+
         const solicitudes = await obtenerSolicitudesUsuario();
+        contenedor.innerHTML = "";
         if (solicitudes.length == 0) {
             const textoSinSolicitudes = document.createElement('h3');
             textoSinSolicitudes.textContent = "Actualmente no tienes solicitudes pendientes."
@@ -172,10 +189,10 @@ async function imprimirSolicitudesUsuario() {
             });
         }
     } catch (err) {
-        alert(err.mensaje);
+        console.error(err.mensaje);
     }
     finally {
-        finalizarCarga(contenedor);
+        if (carga) finalizarCarga(contenedor);
     }
 }
 
